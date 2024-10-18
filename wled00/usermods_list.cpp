@@ -10,7 +10,7 @@
  * \/ \/ \/
  */
 //#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
-#include "../usermods/pwm_outputs/usermod_pwm_outputs.h"
+//#include "../usermods/pwm_outputs/usermod_pwm_outputs.h"
 
 #ifdef USERMOD_BATTERY
   #include "../usermods/Battery/usermod_v2_Battery.h"
@@ -213,6 +213,8 @@ void registerUsermods()
    * \/ \/ \/
    */
   //usermods.add(new MyExampleUsermod());
+  usermods.add(new PwmOutputsUsermod());
+  
   #ifdef USERMOD_BATTERY
   usermods.add(new UsermodBattery());
   #endif
