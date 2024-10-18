@@ -65,12 +65,12 @@ class PwmOutput {
       duty_ = min(1.0f, max(0.0f, duty));
       const uint32_t value = static_cast<uint32_t>((1 << bit_depth_) * duty_);
       ledcWrite(channel_, value);
-      Serial.println(value);
+      //Serial.println(value);
     }
 
     void setDuty(const uint16_t duty) {
       setDuty(static_cast<float>(duty) / 65535.0f);
-      Serial.println("what are we doing here");
+      //Serial.println("what are we doing here");
     }
 
     bool isEnabled() const {
@@ -79,7 +79,7 @@ class PwmOutput {
 
     void addToJsonState(JsonObject& pwmState) const {
       pwmState[F("duty")] = duty_;
-      pwmState[F("transition")] = transition_;  // EDIT
+      pwmState[F("transition")] = transition_;  // update /json/state with new transition value
     }
 
     void readFromJsonState(JsonObject& pwmState) {
@@ -92,21 +92,23 @@ class PwmOutput {
         if (transition_ == 0.0f) {
           setDuty(duty);
           TargetDuty_ = duty;
-          Serial.print(duty);
-          Serial.print(" target -> ");
-          Serial.println(TargetDuty_);
+          //Serial.print(duty);
+          //Serial.print(" target -> ");
+          //Serial.println(TargetDuty_);
         }
         else {
           // Let's have some millis fun
-          Serial.println("Servo locked out");
-          Serial.print(duty);
-          Serial.print(" target -> ");
-          Serial.println(TargetDuty_);
+          Serial.println("Servo locked out set transition back to 0 to unlock");
+          //Serial.print(duty);
+          //Serial.print(" target -> ");
+          //Serial.println(TargetDuty_);
         }
       }
       float transition;  // var for transition time delay
       if (getJsonValue(pwmState[F("transition")], transition)) {
         transition_ = transition; // Update new json value
+        Serial.print("updated transition value from json -> ");
+        Serial.println(transition_);
         //setDuty(transition);
       }
       // END OF EDIT
@@ -170,7 +172,7 @@ class PwmOutputsUsermod : public Usermod {
     void loop() {
       if (millis()-lastTime > delayMs) {
         lastTime = millis();  //do something you want to do every 2 seconds
-        //Serial.println("it's been 2 seconds");
+        Serial.print("it's been 2 seconds -> ");
         PwmOutput myObj;
         //myObj.setDuty(0.5f);
         //Serial.println(myObj.TargetDuty_);
